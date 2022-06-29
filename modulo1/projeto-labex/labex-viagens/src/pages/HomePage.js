@@ -1,6 +1,6 @@
 import React from "react";
 import {useNavigate} from 'react-router-dom'
-import {  goToListTripsPage, GoToLoginPage } from "../routes/coordinator";
+import {  GoToAdminHomePage, goToListTripsPage, GoToLoginPage } from "../routes/coordinator";
 import styled from "styled-components";
 import RoketImg from "../img/rocket.png"
 
@@ -109,20 +109,16 @@ const Foguete = styled.img`
 const MsgViagens = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     padding: 0px;
-    gap: 30px;
+   
 
     width: 97vh;
     height: 250px;
+    margin-left: 100px;
 
-
-    /* Inside auto layout */
-
-    flex: none;
-    order: 0;
-    flex-grow: 0;
+    
 `
 
 const Button = styled.button`
@@ -167,6 +163,10 @@ const HomePage = () => {
                     <div>
                         <LabexSubtitulo>Todas as opções de viagens a sua disposição</LabexSubtitulo>
                         <Button onClick={() => goToListTripsPage(navigate)}>Ver Viagens</Button>
+                    </div>
+                    <div>
+                        <LabexSubtitulo>Area Adminstrador da Pagina</LabexSubtitulo>
+                        <Button onClick={() => GoToAdminHomePage(navigate)}>Area Admin</Button>
                     </div>
                 </MsgViagens>
                 

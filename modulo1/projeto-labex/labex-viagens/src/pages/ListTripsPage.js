@@ -57,7 +57,7 @@ const Button = styled.button`
 const ListTripsPage = () => {
     const navigate = useNavigate();
 
-    const [trips, error, isLoading] = UseRequestData(`${BASE_URL}`);
+    const [trips, error, isLoading] = UseRequestData(`${BASE_URL}/trips`);
    
 
 
@@ -87,8 +87,6 @@ const ListTripsPage = () => {
                     </div> 
                      
                 </div>
-          
-                
               
             </Section1Container>
 

@@ -8,9 +8,6 @@ const  StyleGeral = styled.div`
   box-sizing: border-box;
 `
 
-
-
-
 function App() {
   return (
     <StyleGeral >

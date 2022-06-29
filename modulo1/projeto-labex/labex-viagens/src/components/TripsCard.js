@@ -34,20 +34,16 @@ export const TripsCard = (props) => {
     return (
         <CardContainer>
             <CardList>
-                <StrongList>Nome:</StrongList>
-                <DescricaoList>{props.name}</DescricaoList>
+                
+                <DescricaoList><StrongList>Nome: </StrongList>{props.name}</DescricaoList>
+                
+                <DescricaoList><StrongList>Descrição: </StrongList>{props.description}</DescricaoList>
+                
+                <DescricaoList><StrongList>Planeta: </StrongList>{props.planet}</DescricaoList>
+                
+                <DescricaoList><StrongList>Duração: </StrongList>{props.duration} dias.</DescricaoList>
 
-                <StrongList>Descrição:</StrongList>
-                <DescricaoList>{props.description}</DescricaoList>
-
-                <StrongList>Planeta:</StrongList>
-                <DescricaoList>{props.planet}</DescricaoList>
-
-                <StrongList>Duração:</StrongList>
-                <DescricaoList>{props.duration} dias.</DescricaoList>
-
-                <StrongList>Data:</StrongList>
-                <DescricaoList>{props.date}</DescricaoList>
+                <DescricaoList><StrongList>Data: </StrongList>{props.date}</DescricaoList>
             </CardList>
         </CardContainer>
     )
