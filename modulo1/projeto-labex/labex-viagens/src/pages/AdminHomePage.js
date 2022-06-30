@@ -1,11 +1,12 @@
-import {useNavigate } from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import React from 'react'
 import { useProtectedPage } from '../hooks/useProtectedPage'
-import { goToCreateTripsPage, goToHomePage, GoToLoginPage } from '../routes/coordinator'
+import { goToCreateTripsPage, goToHomePage, goToTripsDetailsPage} from '../routes/coordinator'
 import { UseRequestData } from '../hooks/UseRequestData'
 import { BASE_URL } from '../constantes/BASE_URL'
 import styled from "styled-components";
-import { deleteTrip } from '../services/requests'
+import { logout } from '../services/requests'
+import axios from 'axios'
 
 const Container = styled.div`
     display: flex;
@@ -87,15 +88,28 @@ const NomeTrip = styled.p`
 
 const AdminHomePage = () => {
     useProtectedPage()
-    const { id, name, getTrips } = UseRequestData(`${BASE_URL}/trips/:id`)
-    const [trips, error, isLoading] = UseRequestData(`${BASE_URL}/trips`);
     const navigate = useNavigate()
 
-    const onClickDelete = (e) => {
-        e.stopPropagation()
-        if (window.confirm(`Tem certeza que deseja deletar a viagem ${name}?`)) {
-            deleteTrip(id, getTrips)
-        }
+    const [trips, error, isLoading] = UseRequestData(`${BASE_URL}/trips`);
+
+    const deleteTrip = (id) => {
+        const token = localStorage.getItem('token')
+        const content = 'application/JSON'
+    
+        axios.delete(`${BASE_URL}/trips/${id}`, {
+            headers: {
+                ContentType: content,
+                auth: token
+            }
+        }).then((res) => {
+            if (window.confirm(`Tem certeza que deseja deletar a viagem?`)) {
+                
+                alert('Viagem deletada com sucesso!')
+                console.log(res.data)
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
     }
 
 
@@ -108,7 +122,7 @@ const AdminHomePage = () => {
                 <div>
                     <Button onClick={() => goToHomePage(navigate)}>Voltar</Button>
                     <Button onClick={() => goToCreateTripsPage(navigate)}>Criar Viagem</Button>
-                    <Button onClick={() => GoToLoginPage(navigate)}>Logout </Button>
+                    <Button onClick={() => logout(navigate)}>Logout </Button>
                 </div>
                 {isLoading && <p>Carregando...</p>}
                 {!isLoading && error && <p>Ocorreu um erro na sua busca</p>}
@@ -116,8 +130,10 @@ const AdminHomePage = () => {
                     return (
                             
                         <CardContainer>
-                            <NomeTrip>{viagem.name} </NomeTrip>
-                            <ButtonDel onClick={onClickDelete}>X</ButtonDel>
+
+                            <NomeTrip><Button onClick={() => goToTripsDetailsPage(navigate, viagem.id)}>{viagem.name} </Button></NomeTrip>
+
+                            <ButtonDel onClick={() => deleteTrip(viagem.id)}>X</ButtonDel>
                         </CardContainer>
                                         
                     )
@@ -126,5 +142,6 @@ const AdminHomePage = () => {
         </Container>
     )
 }
+
 
 export {AdminHomePage}

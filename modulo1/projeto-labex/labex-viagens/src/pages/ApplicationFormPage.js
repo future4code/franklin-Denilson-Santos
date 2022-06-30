@@ -4,7 +4,8 @@ import { BASE_URL } from "../constantes/BASE_URL";
 import { UseRequestData } from "../hooks/UseRequestData";
 import { goToListTripsPage} from "../routes/coordinator";
 import { useForm } from "../hooks/useForm";
-import axios from "axios";
+import { useState } from "react";
+import { enviaCandidatura } from "../services/requests";
 
 
 const Container = styled.div`
@@ -60,22 +61,16 @@ const AplicationFormPage = () => {
     const [ todasViagens ] = UseRequestData(`${BASE_URL}/trips`)
     const {form, onChange} = useForm({ name: "", age: "", applicationText: "", profession: "", country: "", tripSelected: "" })
 
-    const onSubmitLogin = (event) => {
-        event.preventDefault(); // Evita que o form atualize ao enviar o form
-        
-        axios.post(`${BASE_URL}/trips/${form.tripSelected}/apply`, form) // O form é passado no lugar do body
-        .then((res) => {
-            console.log("Deu certo",res.data.trip)
-            console.log("Viagem Selecionada", form.tripSelected)
-            alert("Aplicação enviada com sucesso!") 
-           
-        })
-        .catch( (error) => {
-            console.log(" Deu errado",error.res)
-        }) 
-        
+    const [tripId, setTripId] = useState("");
+
+    const enviaForm = (e) => {
+        e.preventDefault()
+        enviaCandidatura(form, tripId)
     }
 
+    const mudaViagem = (e) => {
+        setTripId(e.target.value)
+    }
     
 
     const tripsOptions = todasViagens && todasViagens.length > 0 && todasViagens.map((viagens) => {
@@ -87,8 +82,8 @@ const AplicationFormPage = () => {
             <Section1Container>
                 <FormTitulo>Pagina Formulário da Aplicação</FormTitulo>
                 
-                <form onSubmit={onSubmitLogin}>
-                    <select defaultValue="" name="tripSelected" required value={form.tripSelected}>
+                <form onSubmit={enviaForm}>
+                    <select defaultValue="" onChange={mudaViagem} >
                         <option value="" disabled>Escolha uma Viagem</option>
                         {tripsOptions}
                     </select>

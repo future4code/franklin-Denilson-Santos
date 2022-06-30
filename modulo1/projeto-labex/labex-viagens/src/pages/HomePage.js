@@ -157,7 +157,7 @@ const HomePage = () => {
             <Section2Container>
                 <MsgViagens>
                     <div>
-                        <LabexSubtitulo>Cadastre e crie as suas viagens!</LabexSubtitulo>
+                        <LabexSubtitulo>Faça login e aprove suas viagens</LabexSubtitulo>
                         <Button onClick={() => GoToLoginPage(navigate)}>Pagina de Login</Button>
                     </div>
                     <div>

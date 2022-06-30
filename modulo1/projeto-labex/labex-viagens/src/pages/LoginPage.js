@@ -80,6 +80,7 @@ const LoginPage = () => {
         })
         .catch( (error) => {
             console.log(" Deu errado",error.res)
+            alert("Login ou senha incorreto!")
         }) 
         
     }

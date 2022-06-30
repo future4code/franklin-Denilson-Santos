@@ -34,21 +34,24 @@ const DescricaoList = styled.p`
 
 
 export const CardCandidato = () => {
-    const [personagens, setPersonagens] = useState([]);
+    const [candidates, setCandidates] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
+    
+    //{id: 'NoIFVcOiSgTKTIPVZwXS', candidates: Array(4), approved: Array(0)}
+
+    useEffect((id) => {
         setLoading(true)
         const token = localStorage.getItem('token') 
 
-        axios.get(`https://us-central1-labenu-apis.cloudfunctions.net/labeX/denilson-santos-franklin/trip/NoIFVcOiSgTKTIPVZwXS`, {
+        axios.get(`https://us-central1-labenu-apis.cloudfunctions.net/labeX/denilson-santos-franklin/trip/${id}`, {
             headers: {
                 auth: token
             }
         })
         .then( (res) => {
-            console.log("Deu certo", res.data.trip.candidates)
-            setPersonagens(res.data.trip.candidates);
+            console.log("Deu certo", res.data.trip)
+            setCandidates(res.data.trip.candidates);
             setLoading(false);
             
         })
@@ -58,18 +61,20 @@ export const CardCandidato = () => {
 
     }, [])
 
+    
+
     // Mostra o personagem na tela
 
     const renderPersonagens = () => {
-        return personagens.map(personagem => {
+        return candidates.map(candidato => {
             return (
-                <CardContainer key={personagem.id}>
+                <CardContainer key={candidato.name}>
                     <CardList>
-                        <DescricaoList><StrongList>Nome:</StrongList> {personagem.name}</DescricaoList>
-                        <DescricaoList><StrongList>Idade:</StrongList> {personagem.age}</DescricaoList>
-                        <DescricaoList><StrongList>Texto de Candidatura:</StrongList> {personagem.applicationText}</DescricaoList>
-                        <DescricaoList><StrongList>Pais:</StrongList> {personagem.country}</DescricaoList>
-                        <DescricaoList><StrongList>Profissão:</StrongList> {personagem.profession}</DescricaoList>
+                        <DescricaoList><StrongList>Nome:</StrongList> {candidato.name}</DescricaoList>
+                        <DescricaoList><StrongList>Idade:</StrongList> {candidato.age}</DescricaoList>
+                        <DescricaoList><StrongList>Texto de Candidatura:</StrongList> {candidato.applicationText}</DescricaoList>
+                        <DescricaoList><StrongList>Pais:</StrongList> {candidato.country}</DescricaoList>
+                        <DescricaoList><StrongList>Profissão:</StrongList> {candidato.profession}</DescricaoList>
                     </CardList>
                 </CardContainer>
             );
