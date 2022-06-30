@@ -1,7 +1,4 @@
-import axios from "axios"
-import { useEffect } from "react"
 import { useNavigate} from "react-router-dom"
-import { BASE_URL } from "../constantes/BASE_URL"
 import { GoToAdminHomePage, goToHomePage} from "../routes/coordinator"
 import { CardCandidato } from "../components/CardCandidato"
 import { useProtectedPage } from "../hooks/useProtectedPage"
@@ -57,27 +54,8 @@ const Button = styled.button`
 
 const TripDetailsPage = () => {
     const navigate = useNavigate();
-
     useProtectedPage()
-  
-    useEffect(() => {
-        const token = localStorage.getItem('token') 
-
-        axios.get(`${BASE_URL}/trip/NoIFVcOiSgTKTIPVZwXS`, {
-            headers: {
-                auth: token
-            }
-        })
-        .then( (res) => {
-            console.log("Deu certo", res.data.trip.candidates)
-            
-        })
-        .catch( (error) => {
-            console.log("Deu erro", error.res)
-        })
-
-    }, [])
-
+   
 
     return (
         <Container>
@@ -87,7 +65,7 @@ const TripDetailsPage = () => {
                     {<Button onClick={() => goToHomePage(navigate)}>Voltar</Button> }
                     {<Button onClick={() => GoToAdminHomePage(navigate)}>Pagina Admin</Button> }
                 </div>
-
+                
                 <CardCandidato />
                 
             </Section1Container>

@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { goToHomePage } from "../routes/coordinator";
 import styled from "styled-components";
-import { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../constantes/BASE_URL";
+import { useForm } from "../hooks/useForm";
 
 const Container = styled.div`
     display: flex;
@@ -34,7 +34,7 @@ const Form = styled.form`
     flex-direction: column;
     align-items: center;
     width: 600px;
-    height: 150px;
+    height: 200px;
     
 `
 
@@ -66,25 +66,12 @@ const Button = styled.button`
 const LoginPage = () => {
     const navigate = useNavigate();
 
-    // Criar logica de validar email
-    const [ email, setEmail] = useState("");
-    const [ password, setPassword] = useState("");
+    const { form, onChange } = useForm({ email: "", password: ""})
 
-    const onChangeEmail = (event) => {
-        setEmail(event.target.value);
-    }
-
-    const onChangePassword = (event) => {
-        setPassword(event.target.value);
-    }
-
-    const onSubmitLogin = () => {
-        const body = {
-            email: email,
-            password: password
-        };
-
-        axios.post(`${BASE_URL}/login`, body)
+    const onSubmitLogin = (event) => {
+        event.preventDefault(); // Evita que o form atualize ao enviar o form
+        
+        axios.post(`${BASE_URL}/login`, form) // O form é passado no lugar do body
         .then((res) => {
             console.log("Deu certo",res.data)
             localStorage.setItem("objeto", res.data)
@@ -93,37 +80,36 @@ const LoginPage = () => {
         })
         .catch( (error) => {
             console.log(" Deu errado",error.res)
-        })
+        }) 
         
-    
     }
 
     return (
         <Container>
             <Section1Container>
-            <FormTitulo>Pagina Login</FormTitulo>
-                <Form >
+                <FormTitulo>Pagina Login</FormTitulo>
+                <Form onSubmit={onSubmitLogin}>
                     <input
-                        placeholder="Email"
-                        type="email"
                         name="email"
-                        value={email}
-                        onChange={onChangeEmail}
+                        value={form.email}
+                        onChange={onChange}
+                        type="email"
+                        placeholder="Email"
                         required
                     />
                     <input
                         placeholder="Senha"
                         type="password"
                         name="password"
-                        value={password}
-                        onChange={onChangePassword}
+                        value={form.password}
+                        onChange={onChange}
                         required
                     />
+                    <div>
+                        <Button>Entrar</Button>
+                        {<Button onClick={() => goToHomePage(navigate)}>Voltar</Button> } 
+                    </div>
                 </Form>
-                <div>
-                    {<Button onClick={() => goToHomePage(navigate)}>Voltar</Button> }
-                    <Button type={"submit"} onClick={onSubmitLogin}>Entrar</Button>
-                </div>
                 
 
             </Section1Container>

@@ -2,8 +2,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { BASE_URL } from "../constantes/BASE_URL";
 import { UseRequestData } from "../hooks/UseRequestData";
-import { goToListTripsPage } from "../routes/coordinator";
-import { useState } from 'react';
+import { goToListTripsPage} from "../routes/coordinator";
+import { useForm } from "../hooks/useForm";
+import axios from "axios";
 
 
 const Container = styled.div`
@@ -56,65 +57,95 @@ const Button = styled.button`
 const AplicationFormPage = () => {
     const navigate = useNavigate();
 
-    // getTrips 
-    const [viagens, setViagens] = useState('') 
-    const [trips] = UseRequestData(`${BASE_URL}`);
-    const onChangeTrip = (event) => {
-        setViagens(event.target.value)
+    const [ todasViagens ] = UseRequestData(`${BASE_URL}/trips`)
+    const {form, onChange} = useForm({ name: "", age: "", applicationText: "", profession: "", country: "", tripSelected: "" })
+
+    const onSubmitLogin = (event) => {
+        event.preventDefault(); // Evita que o form atualize ao enviar o form
+        
+        axios.post(`${BASE_URL}/trips/${form.tripSelected}/apply`, form) // O form é passado no lugar do body
+        .then((res) => {
+            console.log("Deu certo",res.data.trip)
+            console.log("Viagem Selecionada", form.tripSelected)
+            alert("Aplicação enviada com sucesso!") 
+           
+        })
+        .catch( (error) => {
+            console.log(" Deu errado",error.res)
+        }) 
+        
     }
-    const optionTrip = trips && trips.map( (trip) => {
-        return <option key={trip.id}>{trip.name}</option>
+
+    
+
+    const tripsOptions = todasViagens && todasViagens.length > 0 && todasViagens.map((viagens) => {
+        return <option key={viagens.id} value={viagens.id}>{viagens.name}</option>
     })
-
-    // aplyToTrips
     
-    
-
     return (
         <Container>
             <Section1Container>
                 <FormTitulo>Pagina Formulário da Aplicação</FormTitulo>
                 
-                <form>
-                    <select value={viagens} onChange={onChangeTrip}>
-                        <option selectd>Escolha sua viagem</option>
-                        {optionTrip}
+                <form onSubmit={onSubmitLogin}>
+                    <select defaultValue="" name="tripSelected" required value={form.tripSelected}>
+                        <option value="" disabled>Escolha uma Viagem</option>
+                        {tripsOptions}
                     </select>
                     
                     <input
-                        placeholder={"Nome"}
+                        name="name"
+                        value={form.name}
+                        onChange={onChange}
+                        type="text"
+                        placeholder="Nome"
+                        required
                         pattern={"^.{3,}$"}
                         title={"O nome deve ter no mínimo 3 caracteres"}
-                        required
                     />
                     <input
-                        placeholder={"Idade"}
-                        type={"text"}
+                        name="age"
+                        value={form.age}
+                        onChange={onChange}
+                        type="number"
+                        placeholder="Idade"
                         required
-                       
+                        min={18}
                     />
                     <input
+                        name="applicationText"
+                        value={form.applicationText}
+                        onChange={onChange}
+                        type="text"
                         placeholder={"Texto de Candidatura"}
                         required
                         pattern={"^.{30,}$"}
                         title={"O texto deve ter no mínimo 30 caracteres"}
                     />
                     <input
+                        name="profession"
+                        value={form.profession}
+                        onChange={onChange}
+                        type="text"
                         placeholder={"Profissão"}
                         required
                         pattern={"^.{10,}$"}
                         title={"A profissão deve ter no mínimo 10 caracteres"}
                     />
                     <input
+                        name="country"
+                        value={form.country}
+                        onChange={onChange}
+                        type="text"
                         placeholder={"País"}
                         required
                     />
+                    <div>
+                        {<Button >Enivar</Button> } 
+                        <Button onClick={() => goToListTripsPage(navigate)}>Ver Viagens</Button>
+                    </div>
                     
                 </form>
-                <div>
-                    {<Button onClick={() => goToListTripsPage(navigate)}>Enivar</Button> } 
-                    <Button onClick={() => goToListTripsPage(navigate)}>Ver Viagens</Button>
-                </div>
                
             </Section1Container>
         </Container>
