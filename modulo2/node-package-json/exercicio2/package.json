@@ -1,0 +1,12 @@
+{
+  "name": "aula-node-exercicio2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "author": "Denilson Santos",
+  "license": "ISC"
+}
