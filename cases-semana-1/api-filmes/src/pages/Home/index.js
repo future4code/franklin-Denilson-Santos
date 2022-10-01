@@ -1,37 +1,39 @@
 import { Conatiner, MovieList, Movies } from "./styles";
 import { APIKey } from "../../config/key";
-import { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
+import { BASE_URL, image_path } from "../../constants/urls";
+import { useRequestData } from "../../hooks/useRequestData";
+import { Pagination } from "../../components/Paginacao";
+import { useState } from "react";
+
+const limit = 1
 
 function Home() {
-    const [movies, setMovies] = useState([])
-    const image_path = 'https://image.tmdb.org/t/p/w500/'
+  const [offset, setOffset] = useState(1)
+  const [data, error, isLoading] = useRequestData(`${BASE_URL}popular?api_key=${APIKey}&language=pt-br&page=${offset}`)
 
-    useEffect(() => {
-        //consumir a api
-        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${APIKey}&language=en-US&page=1`)
-            .then(response => response.json())
-            .then(data => setMovies(data.results))
-    }, [])
+  return (
+    <Conatiner >
+        <h1>Movies</h1>
+        <MovieList> 
+          {isLoading && <p>Carregando...</p>}
+          {!isLoading && error && <p>Ocorreu um erro na sua busca</p>}
+          {!isLoading && data && data.length > 0 && data.map(movie => {
+              return (
+                <Movies key={movie.id}>
 
-    return (
-      <Conatiner >
-         <h1>Movies</h1>
-         <MovieList>
-            
-            {movies.map(movie => {
-                return (
-                    <Movies key={movie.id}>
-                        <a href="https://google.com.br"><img src={`${image_path}${movie.poster_path}`} alt={movie.title}/></a>
-                         <span>{movie.title}</span>
-                    </Movies>
-                    
-                )
-            })}
-
-            
-         </MovieList>
-      </Conatiner>
-    );
-  }
+                  <Link to={`/details/${movie.id}`}><img src={`${image_path}${movie.poster_path}`} alt={movie.title}/></Link>
+                  <span>{movie.title}</span>
+                </Movies>
+                  
+              )
+          })}
+        </MovieList>
+        
+        <Pagination limit={limit} total={5000} offset={offset} setOffset={setOffset}/>
+    
+    </Conatiner>
+  );
+}
   
 export default Home;
