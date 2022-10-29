@@ -21,7 +21,6 @@ export function Details() {
                     image: `${image_path}${poster_path}`,
                     releaseDate: release_date
                 }
-               console.log(movie)
                setMovie(movie) 
             }) 
     }, [id])

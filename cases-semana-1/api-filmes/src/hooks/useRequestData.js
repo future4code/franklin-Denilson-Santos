@@ -7,6 +7,7 @@ export const useRequestData = (url) => {
     const [error, setError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [page, setPage] = useState(undefined)
+    const [genre, setGenre] = useState("")
 
     const getData = () => {
         setIsLoading(true)
@@ -15,6 +16,7 @@ export const useRequestData = (url) => {
                 setIsLoading(false)
                 setData(response.data.results)
                 setPage(response.data.page)
+                setGenre(response)
             })
             .catch((error) => {
                 setIsLoading(false)
@@ -23,5 +25,5 @@ export const useRequestData = (url) => {
     }
 
     useEffect(getData, [url])
-    return ([data, error, isLoading, page])
+    return ([data, error, isLoading, page, genre])
 }
